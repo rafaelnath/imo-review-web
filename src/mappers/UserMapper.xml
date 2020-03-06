@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.neusoft.dao.UserDao">
+
+	<!-- *********************Review***************************** -->
+	<resultMap type="com.neusoft.beans.Reviews" id="ReviewResultMap">
+		<id column="r_id" property="reviewId" jdbcType="INTEGER"/>
+		<id column="r_title" property="reviewTitle" jdbcType="VARCHAR"/>
+		<id column="r_rating" property="reviewRating" jdbcType="INTEGER"/>
+		<id column="r_content" property="reviewComment" jdbcType="VARCHAR"/>
+		<id column="r_username" property = "reviewUserName" jdbcType="VARCHAR"/>
+		<id column="movie_id" property="movieId" jdbcType="INTEGER"/>
+	</resultMap>
+	
+	<!-- *****************************USER******************************* -->
+	<resultMap type="com.neusoft.beans.User" id="UserResultMap">
+		<id column="user_id" property="userId" jdbcType="INTEGER"/>
+		<id column="user_name" property="userName" jdbcType="VARCHAR"/>
+		<id column="user_password" property="password" jdbcType="INTEGER"/>
+		<id column="user_email" property="userEmail" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<!-- *********************Movie***************************** -->
+	<resultMap type="com.neusoft.beans.Movie" id="MovieResultMap">
+		<id column="movie_id" property="movieId" jdbcType="INTEGER"/>
+		<id column="movie_title" property="movieTitle" jdbcType="VARCHAR"/>
+		<id column="movie_genre" property="movieGenre" jdbcType="VARCHAR"/>
+		<id column="movie_duration" property="movieDuration" jdbcType="INTEGER"/>
+		<id column="movie_synopsis" property = "movieSynopsis" jdbcType="VARCHAR"/>
+		<id column="movie_trailer" property = "movieTrailer" jdbcType="VARCHAR"/>
+		<id column="movie_poster" property = "moviePoster" jdbcType="VARCHAR"/>
+		<id column="user_name" property = "userName" jdbcType="VARCHAR"/>
+	</resultMap>
+	
+	<select id="selectAllUser" resultMap="UserResultMap">
+		select * from users;
+	</select>
+	
+	<select id="selectUserById" parameterType="Integer" resultMap="UserResultMap">
+		select * from users where user_id = #{userId}
+	</select>
+	
+	<select id="selectReviewById" parameterType="Integer" resultMap="ReviewResultMap">
+		select * from reviews where movie_id = #{movieId}
+	</select>
+	
+	<select id="selectAllReviews" resultMap="ReviewResultMap">
+		select * from reviews
+	</select>
+	
+	<insert id="registerUser">
+		insert into users(user_name,user_password,user_email) values(#{userName},#{password},#{userEmail})
+	</insert>
+	
+	<insert id="addMovie">
+		insert into movie(movie_title,movie_genre,movie_duration,movie_synopsis,movie_trailer,movie_poster) 
+		values(#{movieTitle},#{movieGenre},#{movieDuration},#{movieSynopsis},#{movieTrailer},#{moviePoster})
+	</insert>
+	
+	<select id="checkPassword" resultType="String">
+		select user_password from users where user_name = #{userName}
+	</select>
+	
+	<select id="selectAllMovies" resultMap="MovieResultMap">
+		select * from movie
+	</select>
+	
+	<select id="selectMovieById" parameterType="Integer" resultMap="MovieResultMap">
+		select * from movie where movie_id = #{movieId}
+	</select>
+	
+	<insert id="addReview" >
+		insert into reviews(r_title,r_rating,r_content,r_username,movie_id) 
+		values(#{reviewTitle},#{reviewRating},#{reviewComment},#{reviewUserName},#{movieId})
+	</insert>
+	
+	<update id="updateUser" parameterType="com.neusoft.beans.User">
+		update users set user_name = #{userName}, user_password = #{password}, user_email = #{userEmail} 
+		where user_id = #{userId}
+	</update>
+	
+	<delete id="deleteUser" parameterType="Integer">
+		delete from users where user_id = #{userId}
+	</delete>
+</mapper>
